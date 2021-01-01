@@ -1,17 +1,16 @@
 package com.example.main;
 
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import com.example.main.entity.Person;
-import com.example.main.repository.PersonEntityManagerRepository;
+import com.example.main.repository.EntityManagerRepository;
 import com.example.main.repository.PersonJPARepository;
+import com.example.main.repository.SimpleJdbcCallExample;
 
 @SpringBootApplication
 public class StoredProcedureAndSpringBootApplication implements CommandLineRunner
@@ -27,12 +26,16 @@ public class StoredProcedureAndSpringBootApplication implements CommandLineRunne
 	private PersonJPARepository personJPARepository;
 	
 	@Autowired
-	private PersonEntityManagerRepository personEntityManagerRepository;
+	private EntityManagerRepository entityManagerRepository;
+	
+	@Autowired
+	private SimpleJdbcCallExample simpleJdbcCall;
 
 	@Override
 	public void run(String... args) throws Exception
 	{
 		Optional<Person> person = personJPARepository.findById(1);
+		
 		if (person.get() != null)
 		{
 			logger.info(person.get().getFirstName());
@@ -44,8 +47,11 @@ public class StoredProcedureAndSpringBootApplication implements CommandLineRunne
 		
 		String inParam = "Happy coding !!!";
 		
-		personEntityManagerRepository.callingSPWithINParameter();
-		logger.info(personEntityManagerRepository.callingSPWithINOUTParameters(inParam));
+		entityManagerRepository.callingSPWithINParameter();
+		
+		logger.info(entityManagerRepository.callingSPWithINOUTParameters(inParam));
+		
+		logger.info("Result from SimpleJdbcCall -> {}", simpleJdbcCall.callStoredProcedure("Input param from SimpleJdbcCall"));
 	}
 
 }
