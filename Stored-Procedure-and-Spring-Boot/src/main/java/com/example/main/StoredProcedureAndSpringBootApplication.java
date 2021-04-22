@@ -38,20 +38,21 @@ public class StoredProcedureAndSpringBootApplication implements CommandLineRunne
 		
 		if (person.get() != null)
 		{
-			logger.info(person.get().getFirstName());
+			logger.info("First Name -> {}", person.get().getFirstName());
 		}
 		else
 		{
 			logger.info("No records found!");
 		}
 		
-		String inParam = "Happy coding !!!";
+		String entityManagerSpCallInParam = "Input param from EntityManager SP Call";
+		String simpleJdbcCallInParam = "Input param from SimpleJdbcCall";
 		
+		logger.info("Calling SP with only IN parameter");
 		entityManagerRepository.callingSPWithINParameter();
 		
-		logger.info(entityManagerRepository.callingSPWithINOUTParameters(inParam));
+		logger.info("Calling SP with IN and OUT parameters -> {}", entityManagerRepository.callingSPWithINOUTParameters(entityManagerSpCallInParam));
 		
-		logger.info("Result from SimpleJdbcCall -> {}", simpleJdbcCall.callStoredProcedure("Input param from SimpleJdbcCall"));
+		logger.info("Result from SimpleJdbcCall -> {}", simpleJdbcCall.callStoredProcedure(simpleJdbcCallInParam));
 	}
-
 }
